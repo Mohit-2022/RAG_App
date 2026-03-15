@@ -26,7 +26,7 @@ def load_chain():
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
-     base_path = os.path.dirname(
+    base_path = os.path.dirname(
         os.path.abspath(__file__)
     )
 
