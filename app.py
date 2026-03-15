@@ -1,4 +1,3 @@
-__import__('pydantic.v1')
 
 import streamlit as st
 from langchain_community.vectorstores import FAISS
