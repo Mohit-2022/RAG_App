@@ -8,3 +8,4 @@ faiss-cpu
 pypdf
 sentence-transformers
 streamlit
+protobuf==3.20.3
