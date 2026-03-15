@@ -36,7 +36,7 @@ def load_chain():
     # Load Gemini
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
-        google_api_key=st.secrets["AIzaSyC5pcBt56XOin6eIy4RTfU7rvfLGq7mbrI"],
+        google_api_key=st.secrets["GOOGLE_API_KEY"],
         temperature=0,
         convert_system_message_to_human=True
     )
