@@ -26,13 +26,10 @@ def load_chain():
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
-    base_path = os.path.dirname(
-        os.path.abspath(__file__)
-    )
 
     # Load saved vectorstore
     vectorstore = FAISS.load_local(
-        base_path,
+        "leave_policy_vectorstore",
         embeddings,
         allow_dangerous_deserialization=True
     )
