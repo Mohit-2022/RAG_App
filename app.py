@@ -88,6 +88,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
+
 if question := st.chat_input("Ask about leave policy..."):
     with st.chat_message("user"):
         st.write(question)
@@ -95,11 +96,15 @@ if question := st.chat_input("Ask about leave policy..."):
         "role": "user",
         "content": question
     })
+
+    answer = ""  # ← define answer BEFORE try block
+
     with st.chat_message("assistant"):
         with st.spinner("🔍 Searching policy..."):
             try:
-                answer = chain.invoke(question)
+                answer = chain.invoke(question)  # ← invoke not chain()
                 st.write(answer)
+
                 with st.expander("📄 View source sections"):
                     docs = retriever.invoke(question)
                     for i, doc in enumerate(docs):
@@ -108,9 +113,12 @@ if question := st.chat_input("Ask about leave policy..."):
                             f"Page {doc.metadata['page']+1}:**"
                         )
                         st.info(doc.page_content[:300])
+
             except Exception as e:
+                answer = "Sorry, please try again!"
                 st.warning("⏳ Please try again!")
+
     st.session_state.messages.append({
         "role": "assistant",
-        "content": answer
+        "content": answer  # ← now always defined!
     })
