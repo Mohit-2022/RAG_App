@@ -38,9 +38,8 @@ def load_chain():
     # Load Gemini
     llm = ChatOpenAI(
         model="gpt-4o-mini",
-        google_api_key=st.secrets["OPENAI_API_KEY"],
-        temperature=0,
-        convert_system_message_to_human=True
+        openai_api_key=st.secrets["OPENAI_API_KEY"],
+        temperature=0
     )
 
     # Custom prompt
