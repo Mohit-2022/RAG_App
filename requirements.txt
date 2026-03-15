@@ -9,3 +9,4 @@ pypdf
 sentence-transformers
 streamlit
 protobuf==3.20.3
+pydantic==1.10.13
