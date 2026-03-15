@@ -81,49 +81,35 @@ chain, retriever = load_chain()
 
 st.success("✅ Leave Policy loaded! Ask your question below.")
 
-# ─────────────────────────────────────────
-# CHAT HISTORY
-# ─────────────────────────────────────────
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Show previous messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# ─────────────────────────────────────────
-# USER INPUT
-# ─────────────────────────────────────────
 if question := st.chat_input("Ask about leave policy..."):
-
-    # Show user question
     with st.chat_message("user"):
         st.write(question)
     st.session_state.messages.append({
         "role": "user",
         "content": question
     })
-
-    # Get answer
     with st.chat_message("assistant"):
         with st.spinner("🔍 Searching policy..."):
-            result = chain({"query": question})
-            answer = result["result"]
-            st.write(answer)
-
-            # Show source pages
-            with st.expander("📄 View source sections"):
-                for i, doc in enumerate(
-                    result["source_documents"]
-                ):
-                    st.markdown(
-                        f"**Source {i+1} — "
-                        f"Page {doc.metadata['page']+1}:**"
-                    )
-                    st.info(doc.page_content[:300])
-
-    # Save answer
+            try:
+                answer = chain.invoke(question)
+                st.write(answer)
+                with st.expander("📄 View source sections"):
+                    docs = retriever.invoke(question)
+                    for i, doc in enumerate(docs):
+                        st.markdown(
+                            f"**Source {i+1} — "
+                            f"Page {doc.metadata['page']+1}:**"
+                        )
+                        st.info(doc.page_content[:300])
+            except Exception as e:
+                st.warning("⏳ Please try again!")
     st.session_state.messages.append({
         "role": "assistant",
         "content": answer
