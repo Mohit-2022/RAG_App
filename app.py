@@ -28,7 +28,7 @@ def load_chain():
 
     # Load saved vectorstore
     vectorstore = FAISS.load_local(
-        "leave_policy_vectorstore",
+        ".",
         embeddings,
         allow_dangerous_deserialization=True
     )
