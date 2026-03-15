@@ -1,9 +1,7 @@
-
-import os
 import streamlit as st
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
@@ -35,9 +33,9 @@ def load_chain():
     )
 
     # Load Gemini
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.0-flash",
-        google_api_key=st.secrets["GOOGLE_API_KEY"],
+    llm = ChatOpenAI(
+        model="gpt-4o-mini",
+        google_api_key=st.secrets["OPENAI_API_KEY"],
         temperature=0,
         convert_system_message_to_human=True
     )
