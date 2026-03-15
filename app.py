@@ -1,4 +1,5 @@
 
+import os
 import streamlit as st
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -25,10 +26,13 @@ def load_chain():
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
+     base_path = os.path.dirname(
+        os.path.abspath(__file__)
+    )
 
     # Load saved vectorstore
     vectorstore = FAISS.load_local(
-        ".",
+        base_path,
         embeddings,
         allow_dangerous_deserialization=True
     )
