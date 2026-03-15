@@ -43,12 +43,12 @@ def load_chain():
 
     # Custom prompt
     prompt_template = """Use the context below to answer
-    the question. If the answer requires any calculation
-    such as addition or subtraction of numbers mentioned
-    in the context, calculate and give the result.
-    If answer is not in context say:
-    "This information is not in the policy document.
-     Please contact HR."
+the question. If the answer requires any calculation
+such as addition or subtraction of numbers mentioned
+in the context, calculate and give the result.
+If answer is not in context say:
+"This information is not in the policy document.
+ Please contact HR."
 
     Context: {context}
 
