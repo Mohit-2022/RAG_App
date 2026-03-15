@@ -5,6 +5,9 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
+
 
 
 st.set_page_config(
@@ -42,40 +45,41 @@ def load_chain():
     )
 
     # Custom prompt
-    prompt_template = """Use the context below to answer
-the question. If the answer requires any calculation
-such as addition or subtraction of numbers mentioned
-in the context, calculate and give the result.
-If answer is not in context say:
-"This information is not in the policy document.
- Please contact HR."
+    
+    prompt = PromptTemplate.from_template("""
+You are a helpful HR assistant.
+Use the context below to answer the question.
+If calculation needed, calculate and give result.
+Answer in 2-3 sentences clearly.
+If not found say: "Not in policy. Please contact HR."
 
-    Context: {context}
-
-    Question: {question}
-
-    Answer:"""
-
-    PROMPT = PromptTemplate(
-        template=prompt_template,
-        input_variables=["context", "question"]
-    )
+Context: {context}
+Question: {question}
+Answer:""")
 
     # Build chain
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=llm,
-        chain_type="stuff",
-        retriever=vectorstore.as_retriever(
-            search_kwargs={"k": 5}
-        ),
-        return_source_documents=True,
-        chain_type_kwargs={"prompt": PROMPT}
+  
+    retriever = vectorstore.as_retriever(
+        search_kwargs={"k": 5}
     )
 
-    return qa_chain
+    def format_docs(docs):
+        return "\n\n".join(
+            doc.page_content for doc in docs
+        )
 
-# Load the chain
-chain = load_chain()
+    chain = (
+        {
+            "context": retriever | format_docs,
+            "question": RunnablePassthrough()
+        }
+        | prompt
+        | llm
+        | StrOutputParser()
+    )
+    return chain, retriever
+chain, retriever = load_chain()
+
 st.success("✅ Leave Policy loaded! Ask your question below.")
 
 # ─────────────────────────────────────────
